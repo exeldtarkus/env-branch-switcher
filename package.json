@@ -48,6 +48,29 @@
           "default": ".env",
           "description": "%config.envFile%"
         },
+        "envBranchSwitcher.exclude": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            ".git",
+            ".env-branches",
+            "node_modules",
+            "target",
+            "build",
+            "bin",
+            "out",
+            "dist",
+            "vendor",
+            ".gradle",
+            ".idea",
+            ".venv",
+            "venv",
+            "__pycache__"
+          ],
+          "description": "%config.exclude%"
+        },
         "envBranchSwitcher.language": {
           "type": "string",
           "enum": [

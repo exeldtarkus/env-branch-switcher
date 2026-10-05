@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import { GitExtension, Repository } from './git';
-import { SNAPSHOT_DIR, saveSnapshot, switchEnv } from './envSwitcher';
+import { DEFAULT_EXCLUDE, SNAPSHOT_DIR, findEnvFiles, saveSnapshot, switchEnv } from './envSwitcher';
 import { messages, resolveLang } from './messages';
 
 const LAST_BRANCH_KEY = 'envBranchSwitcher.lastBranch:';
@@ -36,8 +36,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         return;
       }
       const envFile = config().get<string>('envFile', '.env');
-      if (saveSnapshot(repo.rootUri.fsPath, envFile, branch)) {
-        vscode.window.showInformationMessage(t().saved(envFile, branch));
+      const count = saveSnapshot(repo.rootUri.fsPath, envFiles(repo.rootUri.fsPath), branch);
+      if (count > 0) {
+        vscode.window.showInformationMessage(t().saved(envFile, count, branch));
       } else {
         vscode.window.showWarningMessage(t().envNotFound(envFile));
       }
@@ -71,9 +72,9 @@ function handleChange(context: vscode.ExtensionContext, repo: Repository): void 
 
   const envFile = config().get<string>('envFile', '.env');
   try {
-    const result = switchEnv(root, envFile, last, branch);
+    const result = switchEnv(root, envFiles(root), last, branch);
     if (result.kind === 'restored') {
-      vscode.window.setStatusBarMessage(t().restored(envFile, branch), 5000);
+      vscode.window.setStatusBarMessage(t().restored(envFile, result.count, branch), 5000);
     } else {
       vscode.window.showWarningMessage(t().missing(envFile, branch));
     }
@@ -90,6 +91,11 @@ async function pickRepo(repos: Repository[]): Promise<Repository | undefined> {
     repos.map((r) => ({ label: path.basename(r.rootUri.fsPath), description: r.rootUri.fsPath, repo: r })),
   );
   return picked?.repo;
+}
+
+function envFiles(root: string): string[] {
+  const cfg = config();
+  return findEnvFiles(root, cfg.get<string>('envFile', '.env'), cfg.get<string[]>('exclude', DEFAULT_EXCLUDE));
 }
 
 function config() {

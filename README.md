@@ -6,20 +6,24 @@ A VS Code extension that automatically swaps your `.env` file to match the activ
 
 ## How it works
 
-- When you switch from branch `A` → `B` (via the VS Code UI or the terminal), the contents of `.env` are saved to `.env-branches/A.env`.
-- If `.env-branches/B.env` exists, it is copied to `.env`.
-- If it doesn't exist yet, `.env` is left unchanged and a warning popup is shown. When you later leave `B`, the current `.env` is automatically saved as `B`'s.
+- Every `.env` file in the project is found automatically — at the root or in any subfolder (e.g. `src/main/resources/.env`). Build/dependency folders such as `node_modules`, `target`, `build`, `bin` are skipped.
+- When you switch from branch `A` → `B` (via the VS Code UI or the terminal), all of those `.env` files are saved to `.env-branches/A/`, keeping their folder structure.
+- If `.env-branches/B/` exists, its files are copied back to their original locations.
+- If it doesn't exist yet, the `.env` files are left unchanged and a warning popup is shown. When you later leave `B`, the current `.env` files are automatically saved as `B`'s.
 - `.env-branches/` is automatically added to `.git/info/exclude` so it never gets committed (your project's `.gitignore` is not modified).
 
 Storage layout inside your project:
 
 ```
 my-project/
-├── .env                      ← active file, follows the current branch
+├── .env                          ← active files, follow the current branch
+├── src/main/resources/.env
 └── .env-branches/
-    ├── main.env
-    ├── dev.env
-    └── feature%2Flogin.env   ← branch "feature/login"
+    ├── main/
+    │   ├── .env
+    │   └── src/main/resources/.env
+    ├── dev/
+    └── feature%2Flogin/          ← branch "feature/login"
 ```
 
 ---
@@ -50,7 +54,7 @@ The extension is **disabled by default**. Enable it per project by creating/edit
 
 Or via the UI: `Ctrl+,` → **Workspace** tab → search `Env Branch Switcher` → tick **Enabled**.
 
-If your env file is not `.env` at the repo root (e.g. it lives in a subfolder), also set:
+By default every file named `.env` anywhere in the project is managed. To manage only one specific file, set its path relative to the repo root:
 
 ```json
 {
@@ -86,7 +90,8 @@ Notifications:
 | Setting | Default | Description |
 |---|---|---|
 | `envBranchSwitcher.enabled` | `false` | Automatically swap `.env` when switching branches |
-| `envBranchSwitcher.envFile` | `.env` | Env file path, relative to the repo root |
+| `envBranchSwitcher.envFile` | `.env` | Env file name to find anywhere in the project, or a path relative to the repo root (e.g. `backend/.env`) |
+| `envBranchSwitcher.exclude` | `[".git", ".env-branches", "node_modules", "target", "build", "bin", "out", "dist", "vendor", ".gradle", ".idea", ".venv", "venv", "__pycache__"]` | Folder names skipped when searching for env files |
 | `envBranchSwitcher.language` | `auto` | Notification language: `auto` (follow VS Code), `en`, or `id` |
 
 ## Commands

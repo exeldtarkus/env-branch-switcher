@@ -6,20 +6,24 @@ Extension VS Code yang otomatis menukar file `.env` sesuai git branch yang sedan
 
 ## Cara kerja
 
-- Saat pindah branch `A` → `B` (lewat UI VS Code maupun terminal), isi `.env` disimpan ke `.env-branches/A.env`.
-- Jika `.env-branches/B.env` ada, isinya disalin ke `.env`.
-- Jika belum ada, `.env` dibiarkan apa adanya dan muncul popup peringatan. Saat nanti pindah dari `B`, isi `.env` saat itu otomatis tersimpan sebagai milik `B`.
+- Semua file `.env` di project dicari otomatis, baik di root maupun di subfolder (mis. `src/main/resources/.env`). Folder build/dependency seperti `node_modules`, `target`, `build`, `bin` dilewati.
+- Saat pindah branch `A` → `B` (lewat UI VS Code maupun terminal), semua file `.env` tersebut disimpan ke `.env-branches/A/` dengan struktur folder yang sama.
+- Jika `.env-branches/B/` ada, file-filenya disalin kembali ke lokasi asalnya.
+- Jika belum ada, file `.env` dibiarkan apa adanya dan muncul popup peringatan. Saat nanti pindah dari `B`, file `.env` saat itu otomatis tersimpan sebagai milik `B`.
 - `.env-branches/` otomatis ditambahkan ke `.git/info/exclude` agar tidak ter-commit (`.gitignore` project tidak diubah).
 
 Lokasi penyimpanan di project kamu:
 
 ```
 my-project/
-├── .env                      ← file aktif, isinya mengikuti branch sekarang
+├── .env                          ← file aktif, isinya mengikuti branch sekarang
+├── src/main/resources/.env
 └── .env-branches/
-    ├── main.env
-    ├── dev.env
-    └── feature%2Flogin.env   ← branch "feature/login"
+    ├── main/
+    │   ├── .env
+    │   └── src/main/resources/.env
+    ├── dev/
+    └── feature%2Flogin/          ← branch "feature/login"
 ```
 
 ---
@@ -50,7 +54,7 @@ Extension **nonaktif secara default**. Aktifkan per project dengan membuat/menge
 
 Atau lewat UI: `Ctrl+,` → tab **Workspace** → cari `Env Branch Switcher` → centang **Enabled**.
 
-Jika file env kamu bukan `.env` di root (misalnya di subfolder), atur juga:
+Secara default semua file bernama `.env` di seluruh project dikelola. Untuk mengelola satu file tertentu saja, isi path-nya relatif terhadap root repo:
 
 ```json
 {
@@ -86,7 +90,8 @@ Notifikasi:
 | Setting | Default | Keterangan |
 |---|---|---|
 | `envBranchSwitcher.enabled` | `false` | Aktifkan penukaran `.env` otomatis saat pindah branch |
-| `envBranchSwitcher.envFile` | `.env` | Path file env relatif terhadap root repo |
+| `envBranchSwitcher.envFile` | `.env` | Nama file env yang dicari di seluruh project, atau path relatif terhadap root repo (mis. `backend/.env`) |
+| `envBranchSwitcher.exclude` | `[".git", ".env-branches", "node_modules", "target", "build", "bin", "out", "dist", "vendor", ".gradle", ".idea", ".venv", "venv", "__pycache__"]` | Nama folder yang dilewati saat mencari file env |
 | `envBranchSwitcher.language` | `auto` | Bahasa notifikasi: `auto` (ikut bahasa VS Code), `en`, atau `id` |
 
 ## Commands

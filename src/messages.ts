@@ -1,10 +1,14 @@
 export type Lang = 'en' | 'id';
 
+/** Akhiran jumlah file, hanya ditampilkan jika lebih dari satu. */
+const files = (count: number) => (count > 1 ? ` (${count})` : '');
+
 const en = {
   noActiveBranch: () => 'No active branch.',
-  saved: (file: string, branch: string) => `${file} saved for branch '${branch}'.`,
+  saved: (file: string, count: number, branch: string) => `${file} saved for branch '${branch}'${files(count)}.`,
   envNotFound: (file: string) => `${file} not found.`,
-  restored: (file: string, branch: string) => `$(check) ${file} restored for branch '${branch}'`,
+  restored: (file: string, count: number, branch: string) =>
+    `$(check) ${file} restored for branch '${branch}'${files(count)}`,
   missing: (file: string, branch: string) =>
     `Branch '${branch}' has no saved ${file}. The current ${file} was left unchanged.`,
   failed: (error: string) => `Env Branch Switcher failed: ${error}`,
@@ -12,9 +16,9 @@ const en = {
 
 const id: typeof en = {
   noActiveBranch: () => 'Tidak ada branch aktif.',
-  saved: (file, branch) => `${file} disimpan untuk branch '${branch}'.`,
+  saved: (file, count, branch) => `${file} disimpan untuk branch '${branch}'${files(count)}.`,
   envNotFound: (file) => `${file} tidak ditemukan.`,
-  restored: (file, branch) => `$(check) ${file} dipulihkan untuk branch '${branch}'`,
+  restored: (file, count, branch) => `$(check) ${file} dipulihkan untuk branch '${branch}'${files(count)}`,
   missing: (file, branch) => `Branch '${branch}' belum memiliki ${file} tersimpan. ${file} saat ini tidak diubah.`,
   failed: (error) => `Env Branch Switcher gagal: ${error}`,
 };
