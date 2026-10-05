@@ -52,7 +52,7 @@ The extension is **disabled by default**. Enable it per project by creating/edit
 }
 ```
 
-Or via the Command Palette: `Ctrl+Shift+P` → **Env Branch Switcher: Enable for this workspace**.
+Or via the Command Palette: `Ctrl+Shift+P` → **Env Branch Switcher: Activation** → `true`.
 
 Or via the UI: `Ctrl+,` → **Workspace** tab → search `Env Branch Switcher` → tick **Enabled**.
 
@@ -100,8 +100,7 @@ Notifications:
 
 | Command | What it does |
 |---|---|
-| `Env Branch Switcher: Enable for this workspace` | Set `envBranchSwitcher.enabled` to `true` in the workspace settings (shown only while disabled) |
-| `Env Branch Switcher: Disable for this workspace` | Set `envBranchSwitcher.enabled` to `false` in the workspace settings (shown only while enabled) |
+| `Env Branch Switcher: Activation` | Choose `true` / `false` to set `envBranchSwitcher.enabled` in the workspace settings (default `false`) |
 | `Env Branch Switcher: Save .env for current branch` | Save the current `.env` as the active branch's snapshot |
 | `Env Branch Switcher: Open snapshots folder` | Reveal `.env-branches/` in the Explorer |
 

@@ -52,7 +52,7 @@ Extension **nonaktif secara default**. Aktifkan per project dengan membuat/menge
 }
 ```
 
-Atau lewat Command Palette: `Ctrl+Shift+P` → **Env Branch Switcher: Aktifkan untuk workspace ini**.
+Atau lewat Command Palette: `Ctrl+Shift+P` → **Env Branch Switcher: Aktivasi** → `true`.
 
 Atau lewat UI: `Ctrl+,` → tab **Workspace** → cari `Env Branch Switcher` → centang **Enabled**.
 
@@ -100,8 +100,7 @@ Notifikasi:
 
 | Command | Fungsi |
 |---|---|
-| `Env Branch Switcher: Aktifkan untuk workspace ini` | Set `envBranchSwitcher.enabled` ke `true` di workspace settings (hanya muncul saat nonaktif) |
-| `Env Branch Switcher: Nonaktifkan untuk workspace ini` | Set `envBranchSwitcher.enabled` ke `false` di workspace settings (hanya muncul saat aktif) |
+| `Env Branch Switcher: Aktivasi` | Pilih `true` / `false` untuk mengatur `envBranchSwitcher.enabled` di workspace settings (default `false`) |
 | `Env Branch Switcher: Simpan .env untuk branch saat ini` | Simpan `.env` sekarang sebagai milik branch aktif |
 | `Env Branch Switcher: Buka folder snapshot` | Buka folder `.env-branches/` di Explorer |
 

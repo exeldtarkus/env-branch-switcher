@@ -12,6 +12,8 @@ const en = {
   missing: (file: string, branch: string) =>
     `Branch '${branch}' has no saved ${file}. The current ${file} was left unchanged.`,
   failed: (error: string) => `Env Branch Switcher failed: ${error}`,
+  activationPlaceholder: () => 'Automatically swap .env when switching branches in this workspace?',
+  current: () => 'current',
   enabled: () => 'Env Branch Switcher enabled for this workspace.',
   disabled: () => 'Env Branch Switcher disabled for this workspace.',
 };
@@ -23,6 +25,8 @@ const id: typeof en = {
   restored: (file, count, branch) => `$(check) ${file} dipulihkan untuk branch '${branch}'${files(count)}`,
   missing: (file, branch) => `Branch '${branch}' belum memiliki ${file} tersimpan. ${file} saat ini tidak diubah.`,
   failed: (error) => `Env Branch Switcher gagal: ${error}`,
+  activationPlaceholder: () => 'Tukar .env otomatis saat pindah branch di workspace ini?',
+  current: () => 'saat ini',
   enabled: () => 'Env Branch Switcher diaktifkan untuk workspace ini.',
   disabled: () => 'Env Branch Switcher dinonaktifkan untuk workspace ini.',
 };
