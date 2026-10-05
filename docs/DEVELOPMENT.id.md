@@ -123,6 +123,13 @@ npx ovsx create-namespace exeltarkus -p $OVSX_PAT
 
 ### 4. Publish
 
+**Paling mudah: `npm run deploy`.** Saat pertama dijalankan, script meminta access token (input tersembunyi) dan
+menyimpannya di `deployment/vsx/token` (di-ignore git, tidak ikut ke VSIX). Lalu script berhenti jika versi ini sudah ada
+di Open VSX, membuat namespace jika belum ada, memverifikasi token, menjalankan test, build, dan publish.
+Pakai `npm run deploy -- --new-token` untuk mengganti token yang expired.
+
+Atau manual:
+
 Publish langsung dari source (otomatis menjalankan `vscode:prepublish` → compile):
 
 ```bash
