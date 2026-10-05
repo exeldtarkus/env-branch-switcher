@@ -9,7 +9,7 @@ Extension VS Code yang otomatis menukar file `.env` sesuai git branch yang sedan
 - Semua file `.env` di project dicari otomatis, baik di root maupun di subfolder (mis. `src/main/resources/.env`). Folder build/dependency seperti `node_modules`, `target`, `build`, `bin` dilewati.
 - Saat pindah branch `A` → `B` (lewat UI VS Code maupun terminal), semua file `.env` tersebut disimpan ke `.env-branches/A/` dengan struktur folder yang sama.
 - Jika `.env-branches/B/` ada, file-filenya disalin kembali ke lokasi asalnya.
-- Jika belum ada, file `.env` dibiarkan apa adanya dan muncul popup peringatan. Saat nanti pindah dari `B`, file `.env` saat itu otomatis tersimpan sebagai milik `B`.
+- Jika belum ada, file `.env` dibiarkan apa adanya dan langsung disimpan sebagai snapshot `B` (warisan dari `A`), disertai popup info. Perubahan yang kamu buat di `B` disimpan saat meninggalkan `B` (versi warisan masuk `.backup/`).
 - `.env-branches/` otomatis ditambahkan ke `.git/info/exclude` agar tidak ter-commit (`.gitignore` project tidak diubah).
 
 Lokasi penyimpanan di project kamu:
@@ -84,7 +84,8 @@ git checkout main    # .env milik dev disimpan; .env milik main dipulihkan
 
 Notifikasi:
 - **Pop-up** `Env diperbarui dari snapshot branch 'dev': .env, src/main/resources/.env` (ditambah pesan di status bar) → berhasil ditukar. Hanya muncul jika branch tersebut sudah punya snapshot.
-- **Popup peringatan** `Branch 'dev' belum memiliki .env tersimpan...` → `.env` tidak diubah.
+- **Popup info** `Branch 'dev' belum punya snapshot — dibuat dari env saat ini (dari 'main'): .env` → `.env` tidak diubah dan disimpan sebagai snapshot `dev`.
+- **Popup peringatan** `Branch 'dev' belum memiliki .env tersimpan...` → tidak ada file `.env` di project, tidak ada yang disimpan.
 
 ---
 

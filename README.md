@@ -9,7 +9,7 @@ A VS Code extension that automatically swaps your `.env` file to match the activ
 - Every `.env` file in the project is found automatically — at the root or in any subfolder (e.g. `src/main/resources/.env`). Build/dependency folders such as `node_modules`, `target`, `build`, `bin` are skipped.
 - When you switch from branch `A` → `B` (via the VS Code UI or the terminal), all of those `.env` files are saved to `.env-branches/A/`, keeping their folder structure.
 - If `.env-branches/B/` exists, its files are copied back to their original locations.
-- If it doesn't exist yet, the `.env` files are left unchanged and a warning popup is shown. When you later leave `B`, the current `.env` files are automatically saved as `B`'s.
+- If it doesn't exist yet, the `.env` files are left unchanged and immediately saved as `B`'s snapshot (inherited from `A`), with an info popup. Edits you make on `B` are saved when you leave it (the inherited version goes to `.backup/`).
 - `.env-branches/` is automatically added to `.git/info/exclude` so it never gets committed (your project's `.gitignore` is not modified).
 
 Storage layout inside your project:
@@ -84,7 +84,8 @@ git checkout main    # dev's .env is saved; main's .env is restored
 
 Notifications:
 - **Pop-up** `Env updated from the saved snapshot of branch 'dev': .env, src/main/resources/.env` (plus a status bar message) → swapped successfully. Only shown when the branch already has a snapshot.
-- **Warning popup** `Branch 'dev' has no saved .env...` → `.env` was left unchanged.
+- **Info popup** `No snapshot for branch 'dev' yet — created one from the current env (from 'main'): .env` → `.env` was left unchanged and saved as `dev`'s snapshot.
+- **Warning popup** `Branch 'dev' has no saved .env...` → no `.env` file exists in the project, nothing was saved.
 
 ---
 

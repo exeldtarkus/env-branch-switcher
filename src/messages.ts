@@ -10,6 +10,8 @@ const en = {
   restored: (file: string, count: number, branch: string) =>
     `$(check) ${file} restored for branch '${branch}'${files(count)}`,
   updated: (branch: string, paths: string[]) => `Env updated from the saved snapshot of branch '${branch}': ${paths.join(', ')}`,
+  created: (branch: string, from: string | undefined, paths: string[]) =>
+    `No snapshot for branch '${branch}' yet — created one from the current env${from ? ` (from '${from}')` : ''}: ${paths.join(', ')}`,
   missing: (file: string, branch: string) =>
     `Branch '${branch}' has no saved ${file}. The current ${file} was left unchanged.`,
   failed: (error: string) => `Env Branch Switcher failed: ${error}`,
@@ -26,6 +28,8 @@ const id: typeof en = {
   envNotFound: (file) => `${file} tidak ditemukan.`,
   restored: (file, count, branch) => `$(check) ${file} dipulihkan untuk branch '${branch}'${files(count)}`,
   updated: (branch, paths) => `Env diperbarui dari snapshot branch '${branch}': ${paths.join(', ')}`,
+  created: (branch, from, paths) =>
+    `Branch '${branch}' belum punya snapshot — dibuat dari env saat ini${from ? ` (dari '${from}')` : ''}: ${paths.join(', ')}`,
   missing: (file, branch) => `Branch '${branch}' belum memiliki ${file} tersimpan. ${file} saat ini tidak diubah.`,
   failed: (error) => `Env Branch Switcher gagal: ${error}`,
   activationPlaceholder: () => 'Tukar .env otomatis saat pindah branch di workspace ini?',

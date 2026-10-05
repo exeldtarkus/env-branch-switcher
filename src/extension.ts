@@ -138,6 +138,8 @@ function handleChange(context: vscode.ExtensionContext, repo: Repository): void 
     if (result.kind === 'restored') {
       vscode.window.setStatusBarMessage(t().restored(envFile, result.count, branch), 5000);
       vscode.window.showInformationMessage(t().updated(branch, result.files));
+    } else if (result.kind === 'created') {
+      vscode.window.showInformationMessage(t().created(branch, result.from, result.files));
     } else {
       vscode.window.showWarningMessage(t().missing(envFile, branch));
     }

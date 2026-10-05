@@ -25,6 +25,7 @@ export const DEFAULT_EXCLUDE = [
 
 export type SwitchResult =
   | { kind: 'restored'; branch: string; count: number; files: string[] }
+  | { kind: 'created'; branch: string; from: string | undefined; count: number; files: string[] }
   | { kind: 'missing'; branch: string };
 
 export function snapshotDir(repoRoot: string, branch: string): string {
@@ -84,7 +85,10 @@ export function saveSnapshot(repoRoot: string, files: string[], branch: string):
   return existing.length;
 }
 
-/** Simpan env milik `from`, lalu pulihkan snapshot `to` jika ada. Env file tidak diubah jika snapshot `to` belum ada. */
+/**
+ * Simpan env milik `from`, lalu pulihkan snapshot `to` jika ada. Jika snapshot `to` belum ada, env file tidak diubah
+ * dan isinya saat ini langsung disimpan sebagai snapshot `to`.
+ */
 export function switchEnv(repoRoot: string, files: string[], from: string | undefined, to: string): SwitchResult {
   if (from) {
     saveSnapshot(repoRoot, files, from);
@@ -92,14 +96,22 @@ export function switchEnv(repoRoot: string, files: string[], from: string | unde
   const dir = snapshotDir(repoRoot, to);
   const saved = fs.existsSync(dir) ? listFiles(dir) : [];
   if (saved.length === 0) {
-    return { kind: 'missing', branch: to };
+    const count = saveSnapshot(repoRoot, files, to);
+    if (count === 0) {
+      return { kind: 'missing', branch: to };
+    }
+    return { kind: 'created', branch: to, from, count, files: toPosix(listFiles(dir)) };
   }
   for (const file of saved) {
     const dest = path.join(repoRoot, file);
     fs.mkdirSync(path.dirname(dest), { recursive: true });
     fs.copyFileSync(path.join(dir, file), dest);
   }
-  return { kind: 'restored', branch: to, count: saved.length, files: saved.map((f) => f.split(path.sep).join('/')).sort() };
+  return { kind: 'restored', branch: to, count: saved.length, files: toPosix(saved) };
+}
+
+function toPosix(files: string[]): string[] {
+  return files.map((f) => f.split(path.sep).join('/')).sort();
 }
 
 export function backupDir(repoRoot: string, branch: string): string {
@@ -108,7 +120,7 @@ export function backupDir(repoRoot: string, branch: string): string {
 
 /** True jika isi snapshot di `dir` sama persis dengan `files` di working tree. */
 function sameContent(repoRoot: string, files: string[], dir: string): boolean {
-  const saved = listFiles(dir).map((f) => f.split(path.sep).join('/'));
+  const saved = toPosix(listFiles(dir));
   if (saved.length !== files.length || !files.every((f) => saved.includes(f))) {
     return false;
   }

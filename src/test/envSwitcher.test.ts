@@ -29,12 +29,31 @@ function write(root: string, rel: string, content: string): void {
 const read = (root: string, rel = '.env') => fs.readFileSync(path.join(root, rel), 'utf8');
 const envs = (root: string) => findEnvFiles(root, '.env');
 
-test('branch tanpa snapshot: .env tidak diubah, snapshot branch lama dibuat', () => {
+test('branch tanpa snapshot: .env tidak diubah, snapshot branch lama dan baru dibuat', () => {
   const root = setup();
   const result = switchEnv(root, envs(root), 'main', 'feature/x');
-  assert.deepStrictEqual(result, { kind: 'missing', branch: 'feature/x' });
+  assert.deepStrictEqual(result, { kind: 'created', branch: 'feature/x', from: 'main', count: 1, files: ['.env'] });
   assert.strictEqual(read(root), 'APP=main\n');
   assert.strictEqual(read(snapshotDir(root, 'main')), 'APP=main\n');
+  assert.strictEqual(read(snapshotDir(root, 'feature/x')), 'APP=main\n');
+});
+
+test('tanpa env file sama sekali: missing dan tidak ada snapshot dibuat', () => {
+  const root = setup();
+  fs.rmSync(path.join(root, '.env'));
+  assert.deepStrictEqual(switchEnv(root, envs(root), 'main', 'dev'), { kind: 'missing', branch: 'dev' });
+  assert.strictEqual(fs.existsSync(snapshotDir(root, 'dev')), false);
+});
+
+test('snapshot hasil warisan diperbarui saat meninggalkan branch, versi warisan masuk backup', () => {
+  const root = setup();
+  switchEnv(root, envs(root), 'main', 'dev');
+  fs.writeFileSync(path.join(root, '.env'), 'APP=dev\n');
+  assert.strictEqual(switchEnv(root, envs(root), 'dev', 'main').kind, 'restored');
+  assert.strictEqual(read(root), 'APP=main\n');
+  assert.strictEqual(read(snapshotDir(root, 'dev')), 'APP=dev\n');
+  const backups = fs.readdirSync(backupDir(root, 'dev'));
+  assert.strictEqual(read(path.join(backupDir(root, 'dev'), backups[0])), 'APP=main\n');
 });
 
 test('bolak-balik branch memulihkan .env masing-masing', () => {
