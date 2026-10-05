@@ -182,14 +182,3 @@ git push --follow-tags  # push commit & tag → workflow publish berjalan
 ```
 
 ---
-
-## Troubleshooting
-
-| Masalah | Solusi |
-|---|---|
-| `Unknown publisher` / namespace tidak ditemukan | Jalankan langkah *Buat namespace*; pastikan sama dengan `publisher` di `package.json`. |
-| `You must sign the Publisher Agreement` | Login ke open-vsx.org → Settings → hubungkan akun Eclipse & tanda tangani agreement. |
-| `Extension ... version x.y.z is already published` | Naikkan versi dengan `npm version patch`. |
-| `LICENSE not found` | Tambahkan file `LICENSE` di root project. |
-| `Couldn't detect the repository` saat package | Isi field `repository` di `package.json`, atau pakai `npm run package`. |
-| Extension tidak aktif saat F5 | Pastikan folder yang dibuka di Extension Development Host adalah git repo dan `envBranchSwitcher.enabled` bernilai `true`. |
