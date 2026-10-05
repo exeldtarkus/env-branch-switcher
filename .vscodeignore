@@ -5,3 +5,4 @@ out/test/**
 tsconfig.json
 docs/DEVELOPMENT.md
 docs/DEVELOPMENT.id.md
+scripts/**
