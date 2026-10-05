@@ -25,6 +25,16 @@
   "contributes": {
     "commands": [
       {
+        "command": "envBranchSwitcher.enable",
+        "title": "%command.enable%",
+        "category": "Env Branch Switcher"
+      },
+      {
+        "command": "envBranchSwitcher.disable",
+        "title": "%command.disable%",
+        "category": "Env Branch Switcher"
+      },
+      {
         "command": "envBranchSwitcher.saveSnapshot",
         "title": "%command.saveSnapshot%",
         "category": "Env Branch Switcher"
@@ -35,6 +45,18 @@
         "category": "Env Branch Switcher"
       }
     ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "envBranchSwitcher.enable",
+          "when": "!config.envBranchSwitcher.enabled"
+        },
+        {
+          "command": "envBranchSwitcher.disable",
+          "when": "config.envBranchSwitcher.enabled"
+        }
+      ]
+    },
     "configuration": {
       "title": "Env Branch Switcher",
       "properties": {

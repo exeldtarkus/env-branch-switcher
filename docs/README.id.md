@@ -52,6 +52,8 @@ Extension **nonaktif secara default**. Aktifkan per project dengan membuat/menge
 }
 ```
 
+Atau lewat Command Palette: `Ctrl+Shift+P` → **Env Branch Switcher: Aktifkan untuk workspace ini**.
+
 Atau lewat UI: `Ctrl+,` → tab **Workspace** → cari `Env Branch Switcher` → centang **Enabled**.
 
 Secara default semua file bernama `.env` di seluruh project dikelola. Untuk mengelola satu file tertentu saja, isi path-nya relatif terhadap root repo:
@@ -98,6 +100,8 @@ Notifikasi:
 
 | Command | Fungsi |
 |---|---|
+| `Env Branch Switcher: Aktifkan untuk workspace ini` | Set `envBranchSwitcher.enabled` ke `true` di workspace settings (hanya muncul saat nonaktif) |
+| `Env Branch Switcher: Nonaktifkan untuk workspace ini` | Set `envBranchSwitcher.enabled` ke `false` di workspace settings (hanya muncul saat aktif) |
 | `Env Branch Switcher: Simpan .env untuk branch saat ini` | Simpan `.env` sekarang sebagai milik branch aktif |
 | `Env Branch Switcher: Buka folder snapshot` | Buka folder `.env-branches/` di Explorer |
 

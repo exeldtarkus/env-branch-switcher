@@ -52,6 +52,8 @@ The extension is **disabled by default**. Enable it per project by creating/edit
 }
 ```
 
+Or via the Command Palette: `Ctrl+Shift+P` → **Env Branch Switcher: Enable for this workspace**.
+
 Or via the UI: `Ctrl+,` → **Workspace** tab → search `Env Branch Switcher` → tick **Enabled**.
 
 By default every file named `.env` anywhere in the project is managed. To manage only one specific file, set its path relative to the repo root:
@@ -98,6 +100,8 @@ Notifications:
 
 | Command | What it does |
 |---|---|
+| `Env Branch Switcher: Enable for this workspace` | Set `envBranchSwitcher.enabled` to `true` in the workspace settings (shown only while disabled) |
+| `Env Branch Switcher: Disable for this workspace` | Set `envBranchSwitcher.enabled` to `false` in the workspace settings (shown only while enabled) |
 | `Env Branch Switcher: Save .env for current branch` | Save the current `.env` as the active branch's snapshot |
 | `Env Branch Switcher: Open snapshots folder` | Reveal `.env-branches/` in the Explorer |
 

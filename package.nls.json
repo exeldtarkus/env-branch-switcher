@@ -1,6 +1,8 @@
 {
   "displayName": "Env Branch Switcher",
   "description": "Automatically saves and restores your .env file per git branch when switching branches.",
+  "command.enable": "Enable for this workspace",
+  "command.disable": "Disable for this workspace",
   "command.saveSnapshot": "Save .env for current branch",
   "command.openSnapshotsFolder": "Open snapshots folder",
   "config.enabled": "Automatically swap the .env file when switching branches.",

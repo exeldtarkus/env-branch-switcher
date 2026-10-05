@@ -1,6 +1,8 @@
 {
   "displayName": "Env Branch Switcher",
   "description": "Otomatis menyimpan dan memulihkan file .env per git branch saat pindah branch.",
+  "command.enable": "Aktifkan untuk workspace ini",
+  "command.disable": "Nonaktifkan untuk workspace ini",
   "command.saveSnapshot": "Simpan .env untuk branch saat ini",
   "command.openSnapshotsFolder": "Buka folder snapshot",
   "config.enabled": "Tukar file .env secara otomatis saat pindah branch.",

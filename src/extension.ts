@@ -27,7 +27,14 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   git.repositories.forEach(watch);
   context.subscriptions.push(git.onDidOpenRepository(watch));
 
+  const setEnabled = async (value: boolean) => {
+    await config().update('enabled', value, vscode.ConfigurationTarget.Workspace);
+    vscode.window.showInformationMessage(value ? t().enabled() : t().disabled());
+  };
+
   context.subscriptions.push(
+    vscode.commands.registerCommand('envBranchSwitcher.enable', () => setEnabled(true)),
+    vscode.commands.registerCommand('envBranchSwitcher.disable', () => setEnabled(false)),
     vscode.commands.registerCommand('envBranchSwitcher.saveSnapshot', async () => {
       const repo = await pickRepo(git.repositories);
       const branch = repo?.state.HEAD?.name;
