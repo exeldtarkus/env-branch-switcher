@@ -103,6 +103,7 @@ Notifications:
 | Command | What it does |
 |---|---|
 | `Env Branch Switcher: Activation` | Choose `true` / `false` to set `envBranchSwitcher.enabled` in the workspace settings (default `false`) |
+| `Env Branch Switcher: Language` | Choose `English` or `Bahasa Indonesia` for notifications (saved in your user settings, applies to all projects) |
 | `Env Branch Switcher: Save .env for current branch` | Save the current `.env` as the active branch's snapshot (only while activated) |
 | `Env Branch Switcher: Open snapshots folder` | Reveal `.env-branches/` in the Explorer (only while activated) |
 | `Env Branch Switcher: Reset (delete all saved snapshots)` | After a Yes/No confirmation, delete `.env-branches/` (including backups) and start tracking again from the current branch. Your current `.env` files are not changed (only while activated) |
@@ -113,7 +114,7 @@ Notifications:
 - Before a snapshot is overwritten with different content, the old one is moved to `.env-branches/.backup/<branch>/<timestamp>/` (the 5 most recent are kept).
 - Detached HEAD (e.g. `git checkout <commit>`) is ignored.
 - If you switch branches while VS Code is closed, the swap happens when VS Code is reopened.
-- Command titles and setting descriptions are shown in Indonesian only when the VS Code display language is Indonesian (requires a language pack). Notifications can be forced to Indonesian with `"envBranchSwitcher.language": "id"`.
+- Command titles and setting descriptions are shown in Indonesian only when the VS Code display language is Indonesian (requires a language pack). Notification language can be switched with **Env Branch Switcher: Language** (or `"envBranchSwitcher.language": "en"` / `"id"`).
 - Snapshots live only on your local machine; deleting `.env-branches/` deletes all saved `.env` files.
 
 ---

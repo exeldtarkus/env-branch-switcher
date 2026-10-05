@@ -2,6 +2,7 @@
   "displayName": "Env Branch Switcher",
   "description": "Automatically saves and restores your .env file per git branch when switching branches.",
   "command.activation": "Activation",
+  "command.language": "Language",
   "command.saveSnapshot": "Save .env for current branch",
   "command.openSnapshotsFolder": "Open snapshots folder",
   "command.reset": "Reset (delete all saved snapshots)",

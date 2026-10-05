@@ -30,6 +30,11 @@
         "category": "Env Branch Switcher"
       },
       {
+        "command": "envBranchSwitcher.language",
+        "title": "%command.language%",
+        "category": "Env Branch Switcher"
+      },
+      {
         "command": "envBranchSwitcher.saveSnapshot",
         "title": "%command.saveSnapshot%",
         "category": "Env Branch Switcher"

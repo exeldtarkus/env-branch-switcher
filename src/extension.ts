@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import { GitExtension, Repository } from './git';
 import { DEFAULT_EXCLUDE, SNAPSHOT_DIR, findEnvFiles, resetSnapshots, saveSnapshot, switchEnv } from './envSwitcher';
-import { messages, resolveLang } from './messages';
+import { Lang, messages, resolveLang } from './messages';
 
 const LAST_BRANCH_KEY = 'envBranchSwitcher.lastBranch:';
 
@@ -50,6 +50,23 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       }
       await config().update('enabled', picked.value, vscode.ConfigurationTarget.Workspace);
       vscode.window.showInformationMessage(picked.value ? t().enabled() : t().disabled());
+    }),
+    vscode.commands.registerCommand('envBranchSwitcher.language', async () => {
+      const current = currentLang();
+      const options: { label: string; value: Lang }[] = [
+        { label: 'English', value: 'en' },
+        { label: 'Bahasa Indonesia', value: 'id' },
+      ];
+      const picked = await vscode.window.showQuickPick(
+        options.map((o) => ({ ...o, description: o.value === current ? t().current() : undefined })),
+        { placeHolder: t().languagePlaceholder() },
+      );
+      if (!picked || picked.value === current) {
+        return;
+      }
+      // Bahasa adalah preferensi pribadi, jadi disimpan di user settings (berlaku untuk semua project).
+      await config().update('language', picked.value, vscode.ConfigurationTarget.Global);
+      vscode.window.showInformationMessage(t().languageChanged());
     }),
     vscode.commands.registerCommand('envBranchSwitcher.saveSnapshot', async () => {
       if (!ensureEnabled()) {
@@ -175,8 +192,12 @@ function config() {
   return vscode.workspace.getConfiguration('envBranchSwitcher');
 }
 
+function currentLang(): Lang {
+  return resolveLang(config().get<string>('language'), vscode.env.language);
+}
+
 function t() {
-  return messages(resolveLang(config().get<string>('language'), vscode.env.language));
+  return messages(currentLang());
 }
 
 export function deactivate(): void {}
