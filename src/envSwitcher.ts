@@ -2,6 +2,9 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 export const SNAPSHOT_DIR = '.env-branches';
+/** Nama ref git tidak boleh diawali '.', jadi folder ini tidak bisa bentrok dengan snapshot branch. */
+export const BACKUP_DIR = '.backup';
+export const MAX_BACKUPS = 5;
 
 export const DEFAULT_EXCLUDE = [
   '.git',
@@ -21,7 +24,7 @@ export const DEFAULT_EXCLUDE = [
 ];
 
 export type SwitchResult =
-  | { kind: 'restored'; branch: string; count: number }
+  | { kind: 'restored'; branch: string; count: number; files: string[] }
   | { kind: 'missing'; branch: string };
 
 export function snapshotDir(repoRoot: string, branch: string): string {
@@ -66,7 +69,12 @@ export function saveSnapshot(repoRoot: string, files: string[], branch: string):
     return 0; // jangan hapus snapshot lama jika tidak ada yang bisa disimpan
   }
   const dir = snapshotDir(repoRoot, branch);
-  fs.rmSync(dir, { recursive: true, force: true });
+  if (fs.existsSync(dir)) {
+    if (sameContent(repoRoot, existing, dir)) {
+      return existing.length;
+    }
+    backupSnapshot(repoRoot, branch);
+  }
   ensureExcluded(repoRoot);
   for (const file of existing) {
     const dest = path.join(dir, file);
@@ -91,7 +99,36 @@ export function switchEnv(repoRoot: string, files: string[], from: string | unde
     fs.mkdirSync(path.dirname(dest), { recursive: true });
     fs.copyFileSync(path.join(dir, file), dest);
   }
-  return { kind: 'restored', branch: to, count: saved.length };
+  return { kind: 'restored', branch: to, count: saved.length, files: saved.map((f) => f.split(path.sep).join('/')).sort() };
+}
+
+export function backupDir(repoRoot: string, branch: string): string {
+  return path.join(repoRoot, SNAPSHOT_DIR, BACKUP_DIR, encodeURIComponent(branch));
+}
+
+/** True jika isi snapshot di `dir` sama persis dengan `files` di working tree. */
+function sameContent(repoRoot: string, files: string[], dir: string): boolean {
+  const saved = listFiles(dir).map((f) => f.split(path.sep).join('/'));
+  if (saved.length !== files.length || !files.every((f) => saved.includes(f))) {
+    return false;
+  }
+  return files.every((f) => fs.readFileSync(path.join(repoRoot, f)).equals(fs.readFileSync(path.join(dir, f))));
+}
+
+/** Pindahkan snapshot lama `branch` ke folder backup bertimestamp, simpan maksimal MAX_BACKUPS terbaru. */
+function backupSnapshot(repoRoot: string, branch: string): void {
+  const root = backupDir(repoRoot, branch);
+  fs.mkdirSync(root, { recursive: true });
+  const stamp = new Date().toISOString().replace(/[:.]/g, '-');
+  let target = path.join(root, stamp);
+  for (let n = 1; fs.existsSync(target); n++) {
+    target = path.join(root, `${stamp}-${n}`);
+  }
+  fs.renameSync(snapshotDir(repoRoot, branch), target);
+  const old = fs.readdirSync(root).sort().slice(0, -MAX_BACKUPS);
+  for (const name of old) {
+    fs.rmSync(path.join(root, name), { recursive: true, force: true });
+  }
 }
 
 /** Semua file di dalam `dir` (rekursif), sebagai path relatif terhadap `dir`. */
@@ -103,6 +140,11 @@ function listFiles(dir: string, rel = ''): string[] {
     }
     return entry.isFile() ? [childRel] : [];
   });
+}
+
+/** Hapus semua snapshot (termasuk backup) di repo. Env file di working tree tidak diubah. */
+export function resetSnapshots(repoRoot: string): void {
+  fs.rmSync(path.join(repoRoot, SNAPSHOT_DIR), { recursive: true, force: true });
 }
 
 /** Tambahkan folder snapshot ke .git/info/exclude agar tidak ikut ter-commit. */

@@ -38,8 +38,29 @@
         "command": "envBranchSwitcher.openSnapshotsFolder",
         "title": "%command.openSnapshotsFolder%",
         "category": "Env Branch Switcher"
+      },
+      {
+        "command": "envBranchSwitcher.reset",
+        "title": "%command.reset%",
+        "category": "Env Branch Switcher"
       }
     ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "envBranchSwitcher.saveSnapshot",
+          "when": "config.envBranchSwitcher.enabled"
+        },
+        {
+          "command": "envBranchSwitcher.openSnapshotsFolder",
+          "when": "config.envBranchSwitcher.enabled"
+        },
+        {
+          "command": "envBranchSwitcher.reset",
+          "when": "config.envBranchSwitcher.enabled"
+        }
+      ]
+    },
     "configuration": {
       "title": "Env Branch Switcher",
       "properties": {

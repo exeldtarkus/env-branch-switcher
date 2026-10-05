@@ -23,7 +23,8 @@ my-project/
     │   ├── .env
     │   └── src/main/resources/.env
     ├── dev/
-    └── feature%2Flogin/          ← branch "feature/login"
+    ├── feature%2Flogin/          ← branch "feature/login"
+    └── .backup/                  ← previous snapshots (last 5 per branch)
 ```
 
 ---
@@ -82,7 +83,7 @@ git checkout main    # dev's .env is saved; main's .env is restored
 ```
 
 Notifications:
-- **Status bar** `✓ .env restored for branch 'dev'` → swapped successfully.
+- **Pop-up** `Env updated from the saved snapshot of branch 'dev': .env, src/main/resources/.env` (plus a status bar message) → swapped successfully. Only shown when the branch already has a snapshot.
 - **Warning popup** `Branch 'dev' has no saved .env...` → `.env` was left unchanged.
 
 ---
@@ -101,11 +102,14 @@ Notifications:
 | Command | What it does |
 |---|---|
 | `Env Branch Switcher: Activation` | Choose `true` / `false` to set `envBranchSwitcher.enabled` in the workspace settings (default `false`) |
-| `Env Branch Switcher: Save .env for current branch` | Save the current `.env` as the active branch's snapshot |
-| `Env Branch Switcher: Open snapshots folder` | Reveal `.env-branches/` in the Explorer |
+| `Env Branch Switcher: Save .env for current branch` | Save the current `.env` as the active branch's snapshot (only while activated) |
+| `Env Branch Switcher: Open snapshots folder` | Reveal `.env-branches/` in the Explorer (only while activated) |
+| `Env Branch Switcher: Reset (delete all saved snapshots)` | After a Yes/No confirmation, delete `.env-branches/` (including backups) and start tracking again from the current branch. Your current `.env` files are not changed (only while activated) |
 
 ## Notes
 
+- While deactivated, branch switches are not tracked. After activating again, the current `.env` is treated as belonging to the branch that was active when the extension was last enabled, so it is never saved under the wrong branch.
+- Before a snapshot is overwritten with different content, the old one is moved to `.env-branches/.backup/<branch>/<timestamp>/` (the 5 most recent are kept).
 - Detached HEAD (e.g. `git checkout <commit>`) is ignored.
 - If you switch branches while VS Code is closed, the swap happens when VS Code is reopened.
 - Command titles and setting descriptions are shown in Indonesian only when the VS Code display language is Indonesian (requires a language pack). Notifications can be forced to Indonesian with `"envBranchSwitcher.language": "id"`.

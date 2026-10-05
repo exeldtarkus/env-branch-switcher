@@ -23,7 +23,8 @@ my-project/
     │   ├── .env
     │   └── src/main/resources/.env
     ├── dev/
-    └── feature%2Flogin/          ← branch "feature/login"
+    ├── feature%2Flogin/          ← branch "feature/login"
+    └── .backup/                  ← snapshot lama (5 terakhir per branch)
 ```
 
 ---
@@ -82,7 +83,7 @@ git checkout main    # .env milik dev disimpan; .env milik main dipulihkan
 ```
 
 Notifikasi:
-- **Status bar** `✓ .env dipulihkan untuk branch 'dev'` → berhasil ditukar.
+- **Pop-up** `Env diperbarui dari snapshot branch 'dev': .env, src/main/resources/.env` (ditambah pesan di status bar) → berhasil ditukar. Hanya muncul jika branch tersebut sudah punya snapshot.
 - **Popup peringatan** `Branch 'dev' belum memiliki .env tersimpan...` → `.env` tidak diubah.
 
 ---
@@ -101,11 +102,14 @@ Notifikasi:
 | Command | Fungsi |
 |---|---|
 | `Env Branch Switcher: Aktivasi` | Pilih `true` / `false` untuk mengatur `envBranchSwitcher.enabled` di workspace settings (default `false`) |
-| `Env Branch Switcher: Simpan .env untuk branch saat ini` | Simpan `.env` sekarang sebagai milik branch aktif |
-| `Env Branch Switcher: Buka folder snapshot` | Buka folder `.env-branches/` di Explorer |
+| `Env Branch Switcher: Simpan .env untuk branch saat ini` | Simpan `.env` sekarang sebagai milik branch aktif (hanya saat aktif) |
+| `Env Branch Switcher: Buka folder snapshot` | Buka folder `.env-branches/` di Explorer (hanya saat aktif) |
+| `Env Branch Switcher: Reset (hapus semua snapshot tersimpan)` | Setelah konfirmasi Yes/No, hapus `.env-branches/` (termasuk backup) dan mulai mencatat ulang dari branch sekarang. File `.env` saat ini tidak diubah (hanya saat aktif) |
 
 ## Catatan
 
+- Selama nonaktif, perpindahan branch tidak dicatat. Setelah diaktifkan lagi, `.env` saat itu dianggap milik branch yang aktif ketika extension terakhir kali aktif, sehingga tidak pernah tersimpan atas nama branch yang salah.
+- Sebelum snapshot ditimpa dengan isi berbeda, snapshot lama dipindahkan ke `.env-branches/.backup/<branch>/<waktu>/` (5 terakhir disimpan).
 - Detached HEAD (misalnya `git checkout <commit>`) diabaikan.
 - Jika branch diganti saat VS Code tertutup, penukaran dilakukan saat VS Code dibuka kembali.
 - Bahasa Indonesia untuk judul command & deskripsi settings hanya muncul jika bahasa tampilan VS Code diatur ke Indonesia (butuh language pack). Notifikasi bisa dipaksa ke Bahasa Indonesia dengan `"envBranchSwitcher.language": "id"`.

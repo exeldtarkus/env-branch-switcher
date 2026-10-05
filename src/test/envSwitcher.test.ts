@@ -3,7 +3,16 @@ import * as assert from 'node:assert';
 import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
-import { findEnvFiles, snapshotDir, switchEnv } from '../envSwitcher';
+import {
+  MAX_BACKUPS,
+  SNAPSHOT_DIR,
+  backupDir,
+  findEnvFiles,
+  resetSnapshots,
+  saveSnapshot,
+  snapshotDir,
+  switchEnv,
+} from '../envSwitcher';
 
 function setup(): string {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'env-switch-'));
@@ -71,11 +80,64 @@ test('semua .env di subfolder ikut disimpan dan dipulihkan per branch', () => {
   fs.writeFileSync(path.join(root, '.env'), 'APP=dev\n');
 
   const result = switchEnv(root, envs(root), 'dev', 'main');
-  assert.deepStrictEqual(result, { kind: 'restored', branch: 'main', count: 2 });
+  assert.deepStrictEqual(result, {
+    kind: 'restored',
+    branch: 'main',
+    count: 2,
+    files: ['.env', 'src/main/resources/.env'],
+  });
   assert.strictEqual(read(root, nested), 'DB=main\n');
   assert.strictEqual(read(root), 'APP=main\n');
 
   switchEnv(root, envs(root), 'main', 'dev');
   assert.strictEqual(read(root, nested), 'DB=dev\n');
+  assert.strictEqual(read(root), 'APP=dev\n');
+});
+
+test('snapshot lama yang berbeda di-backup sebelum ditimpa', () => {
+  const root = setup();
+  saveSnapshot(root, envs(root), 'dev');
+  fs.writeFileSync(path.join(root, '.env'), 'APP=other\n');
+  saveSnapshot(root, envs(root), 'dev');
+  assert.strictEqual(read(snapshotDir(root, 'dev')), 'APP=other\n');
+  const backups = fs.readdirSync(backupDir(root, 'dev'));
+  assert.strictEqual(backups.length, 1);
+  assert.strictEqual(read(path.join(backupDir(root, 'dev'), backups[0])), 'APP=main\n');
+});
+
+test('tidak ada backup jika isi snapshot sama', () => {
+  const root = setup();
+  saveSnapshot(root, envs(root), 'dev');
+  saveSnapshot(root, envs(root), 'dev');
+  assert.strictEqual(fs.existsSync(backupDir(root, 'dev')), false);
+});
+
+test(`backup dibatasi ${MAX_BACKUPS} terbaru per branch`, () => {
+  const root = setup();
+  for (let i = 0; i <= MAX_BACKUPS + 2; i++) {
+    fs.writeFileSync(path.join(root, '.env'), `APP=${i}\n`);
+    saveSnapshot(root, envs(root), 'dev');
+  }
+  const backups = fs.readdirSync(backupDir(root, 'dev')).sort();
+  assert.strictEqual(backups.length, MAX_BACKUPS);
+  assert.strictEqual(read(path.join(backupDir(root, 'dev'), backups[MAX_BACKUPS - 1])), `APP=${MAX_BACKUPS + 1}\n`);
+});
+
+test('folder backup tidak dianggap sebagai env file atau snapshot branch', () => {
+  const root = setup();
+  saveSnapshot(root, envs(root), 'main');
+  fs.writeFileSync(path.join(root, '.env'), 'APP=x\n');
+  saveSnapshot(root, envs(root), 'main');
+  assert.deepStrictEqual(envs(root), ['.env']);
+  assert.deepStrictEqual(switchEnv(root, envs(root), 'main', 'main').kind, 'restored');
+});
+
+test('resetSnapshots menghapus semua snapshot tanpa mengubah .env', () => {
+  const root = setup();
+  switchEnv(root, envs(root), 'main', 'dev');
+  fs.writeFileSync(path.join(root, '.env'), 'APP=dev\n');
+  saveSnapshot(root, envs(root), 'main');
+  resetSnapshots(root);
+  assert.strictEqual(fs.existsSync(path.join(root, SNAPSHOT_DIR)), false);
   assert.strictEqual(read(root), 'APP=dev\n');
 });

@@ -4,6 +4,7 @@
   "command.activation": "Activation",
   "command.saveSnapshot": "Save .env for current branch",
   "command.openSnapshotsFolder": "Open snapshots folder",
+  "command.reset": "Reset (delete all saved snapshots)",
   "config.enabled": "Automatically swap the .env file when switching branches.",
   "config.envFile": "Name of the env file to find anywhere in the project (e.g. \".env\"), or a path relative to the repo root (e.g. \"backend/.env\").",
   "config.exclude": "Folder names skipped when searching for env files.",

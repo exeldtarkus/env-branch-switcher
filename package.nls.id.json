@@ -4,6 +4,7 @@
   "command.activation": "Aktivasi",
   "command.saveSnapshot": "Simpan .env untuk branch saat ini",
   "command.openSnapshotsFolder": "Buka folder snapshot",
+  "command.reset": "Reset (hapus semua snapshot tersimpan)",
   "config.enabled": "Tukar file .env secara otomatis saat pindah branch.",
   "config.envFile": "Nama file env yang dicari di seluruh project (mis. \".env\"), atau path relatif terhadap root repo (mis. \"backend/.env\").",
   "config.exclude": "Nama folder yang dilewati saat mencari file env.",
