@@ -1,6 +1,6 @@
 # Env Branch Switcher
 
-🇬🇧 English | 🇮🇩 [Bahasa Indonesia](README.id.md)
+🇬🇧 English | 🇮🇩 [Bahasa Indonesia](docs/README.id.md)
 
 A VS Code extension that automatically swaps your `.env` file to match the active git branch.
 
@@ -104,3 +104,6 @@ Notifications:
 - Snapshots live only on your local machine; deleting `.env-branches/` deletes all saved `.env` files.
 
 ---
+## Development
+
+See [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) for running locally and publishing to Open VSX.

@@ -1,6 +1,6 @@
 # Env Branch Switcher
 
-🇬🇧 [English](README.md) | 🇮🇩 Bahasa Indonesia
+🇬🇧 [English](../README.md) | 🇮🇩 Bahasa Indonesia
 
 Extension VS Code yang otomatis menukar file `.env` sesuai git branch yang sedang aktif.
 
@@ -106,6 +106,8 @@ Notifikasi:
 ---
 
 ## Development
+
+Lihat [DEVELOPMENT.id.md](DEVELOPMENT.id.md) untuk panduan lengkap menjalankan lokal dan publish ke Open VSX.
 
 ```bash
 npm install
