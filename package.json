@@ -1,0 +1,78 @@
+{
+  "name": "env-branch-switcher",
+  "displayName": "%displayName%",
+  "description": "%description%",
+  "version": "0.0.1",
+  "publisher": "exeltarkus",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "workspaceContains:.git"
+  ],
+  "extensionDependencies": [
+    "vscode.git"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "envBranchSwitcher.saveSnapshot",
+        "title": "%command.saveSnapshot%",
+        "category": "Env Branch Switcher"
+      },
+      {
+        "command": "envBranchSwitcher.openSnapshotsFolder",
+        "title": "%command.openSnapshotsFolder%",
+        "category": "Env Branch Switcher"
+      }
+    ],
+    "configuration": {
+      "title": "Env Branch Switcher",
+      "properties": {
+        "envBranchSwitcher.enabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "%config.enabled%"
+        },
+        "envBranchSwitcher.envFile": {
+          "type": "string",
+          "default": ".env",
+          "description": "%config.envFile%"
+        },
+        "envBranchSwitcher.language": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "en",
+            "id"
+          ],
+          "default": "auto",
+          "enumDescriptions": [
+            "%config.language.auto%",
+            "%config.language.en%",
+            "%config.language.id%"
+          ],
+          "description": "%config.language%"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "test": "npm run compile && node --test out/test/*.test.js",
+    "package": "vsce package --allow-missing-repository --skip-license --no-rewrite-relative-links"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.43",
+    "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^3.0.0",
+    "typescript": "^5.4.0"
+  }
+}

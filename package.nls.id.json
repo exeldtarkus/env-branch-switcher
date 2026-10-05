@@ -1,0 +1,12 @@
+{
+  "displayName": "Env Branch Switcher",
+  "description": "Otomatis menyimpan dan memulihkan file .env per git branch saat pindah branch.",
+  "command.saveSnapshot": "Simpan .env untuk branch saat ini",
+  "command.openSnapshotsFolder": "Buka folder snapshot",
+  "config.enabled": "Tukar file .env secara otomatis saat pindah branch.",
+  "config.envFile": "Path file env (relatif terhadap root repo) yang dikelola per branch.",
+  "config.language": "Bahasa untuk notifikasi.",
+  "config.language.auto": "Ikuti bahasa tampilan VS Code.",
+  "config.language.en": "English",
+  "config.language.id": "Bahasa Indonesia"
+}
