@@ -1,0 +1,12 @@
+{
+  "displayName": "Env Branch Switcher",
+  "description": "Automatically saves and restores your .env file per git branch when switching branches.",
+  "command.saveSnapshot": "Save .env for current branch",
+  "command.openSnapshotsFolder": "Open snapshots folder",
+  "config.enabled": "Automatically swap the .env file when switching branches.",
+  "config.envFile": "Path of the env file (relative to the repo root) managed per branch.",
+  "config.language": "Language for notifications.",
+  "config.language.auto": "Follow the VS Code display language.",
+  "config.language.en": "English",
+  "config.language.id": "Bahasa Indonesia"
+}
